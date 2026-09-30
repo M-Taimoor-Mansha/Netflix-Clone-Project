@@ -1,0 +1,1910 @@
+/* ==========================================
+   NETFLIX CLONE - MASTER STYLESHEET
+   Aesthetics: Authentic Netflix UI, Sleek Dark Mode,
+   Micro-animations, Glassmorphism, Responsive Swiper Rows
+   ========================================== */
+
+:root {
+  --netflix-red: #e50914;
+  --netflix-red-hover: #b80710;
+  --bg-black: #141414;
+  --bg-darker: #0c0c0c;
+  --card-bg: #181818;
+  --modal-bg: #181818;
+  --text-white: #ffffff;
+  --text-gray: #e5e5e5;
+  --text-muted: #808080;
+  --border-gray: #333333;
+  --green-match: #46d369;
+  --trans-fast: 0.2s ease;
+  --trans-smooth: 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.7);
+  --shadow-modal: 0 16px 48px rgba(0, 0, 0, 0.9);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Netflix Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-black);
+  color: var(--text-white);
+  overflow-x: hidden;
+  line-height: 1.4;
+  user-select: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-black);
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* ==========================================
+   HEADER & NAVBAR
+   ========================================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 68px;
+  padding: 0 4%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+  transition: background-color 0.4s ease, height 0.3s ease, box-shadow 0.4s ease;
+}
+
+.navbar.scrolled {
+  background-color: #141414;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+}
+
+/* Netflix Logo */
+.netflix-logo {
+  height: 32px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), filter 0.25s ease;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.netflix-logo:hover {
+  transform: scale(1.06);
+  filter: brightness(1.2) drop-shadow(0 0 14px rgba(229, 9, 20, 0.5));
+}
+
+.netflix-logo svg,
+.netflix-logo-svg {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+
+/* Nav Links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-gray);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color var(--trans-fast);
+  cursor: pointer;
+}
+
+.nav-links a:hover {
+  color: #b3b3b3;
+}
+
+.nav-links a.active {
+  color: var(--text-white);
+  font-weight: 700;
+  cursor: default;
+}
+
+/* Secondary Navigation (Right) */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* Search Box */
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 5px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, border-color 0.3s ease, width 0.3s ease;
+}
+
+.search-box.active {
+  background: rgba(0, 0, 0, 0.85);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.search-icon-btn {
+  background: none;
+  border: none;
+  color: var(--text-white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: transform 0.2s ease;
+}
+
+.search-icon-btn:hover {
+  transform: scale(1.1);
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 0.85rem;
+  outline: none;
+  width: 0;
+  opacity: 0;
+  padding: 0;
+  transition: width 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+}
+
+.search-box.active .search-input {
+  width: 210px;
+  opacity: 1;
+  padding: 0 8px;
+}
+
+.search-clear-btn {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: none;
+}
+
+.search-box.active.has-text .search-clear-btn {
+  display: block;
+}
+
+.kids-link {
+  color: var(--text-gray);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--trans-fast);
+}
+
+.kids-link:hover {
+  color: #fff;
+}
+
+/* Notification Button & Menu */
+.notification-wrapper {
+  position: relative;
+}
+
+.nav-icon-btn {
+  background: none;
+  border: none;
+  color: var(--text-white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.nav-icon-btn:hover {
+  transform: scale(1.08);
+}
+
+.notif-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--netflix-red);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 50%;
+}
+
+.notifications-dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: 0;
+  width: 320px;
+  background: rgba(18, 18, 18, 0.96);
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 1rem 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.85);
+  display: none;
+  flex-direction: column;
+  z-index: 120;
+  backdrop-filter: blur(12px);
+}
+
+.notifications-dropdown.show {
+  display: flex;
+  animation: fadeIn 0.2s ease;
+}
+
+.notif-header {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-gray);
+  padding: 0 1rem 0.5rem;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.notif-list {
+  list-style: none;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.notif-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.notif-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.notif-item img {
+  width: 90px;
+  height: 52px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.notif-info h4 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.notif-info p {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.notif-info span {
+  font-size: 0.65rem;
+  color: #666;
+}
+
+/* User Profile Menu */
+.user-menu-wrapper {
+  position: relative;
+}
+
+.user-avatar-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.user-avatar-btn img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.caret-icon {
+  fill: #fff;
+  transition: transform 0.25s ease;
+}
+
+.user-menu-wrapper:hover .caret-icon {
+  transform: rotate(180deg);
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: 0;
+  width: 200px;
+  background: rgba(18, 18, 18, 0.95);
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 0.75rem 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.85);
+  display: none;
+  flex-direction: column;
+  z-index: 120;
+  backdrop-filter: blur(12px);
+}
+
+.user-menu-wrapper:hover .profile-dropdown {
+  display: flex;
+  animation: fadeIn 0.2s ease;
+}
+
+.profile-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.5rem 1rem;
+  color: #ccc;
+  text-decoration: none;
+  font-size: 0.82rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.profile-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.profile-item img {
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
+}
+
+.profile-divider {
+  height: 1px;
+  background: #2b2b2b;
+  margin: 0.5rem 0;
+}
+
+/* Mobile Nav Toggle */
+.mobile-nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ==========================================
+   CINEMATIC HERO BILLBOARD
+   ========================================== */
+.hero {
+  position: relative;
+  height: 85vh;
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  padding: 0 4%;
+  margin-bottom: -4rem;
+  overflow: hidden;
+}
+
+.hero-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero-backdrop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  filter: brightness(0.92);
+  transition: transform 6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.hero:hover .hero-backdrop img {
+  transform: scale(1.02);
+}
+
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(77deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 85%),
+    linear-gradient(180deg, rgba(20, 20, 20, 0.2) 0%, transparent 50%, #141414 100%);
+  z-index: 2;
+}
+
+.hero-content {
+  max-width: 620px;
+  z-index: 3;
+  padding-bottom: 2rem;
+  animation: heroSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-series-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #e5e5e5;
+  margin-bottom: 0.75rem;
+}
+
+.hero-n-badge {
+  color: var(--netflix-red);
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 2px 8px rgba(229, 9, 20, 0.5);
+}
+
+.hero-title {
+  font-size: 3.8rem;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  margin-bottom: 1rem;
+  text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.9);
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #ffffff 40%, #cccccc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-badges-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.badge-top10 {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--netflix-red);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.badge-match {
+  color: var(--green-match);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.badge-pill {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  font-size: 0.72rem;
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+.hero-synopsis {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: #fff;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9);
+  margin-bottom: 1.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1.85rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.btn-white {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.btn-white:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+  transform: scale(1.03);
+}
+
+.btn-gray {
+  background-color: rgba(109, 109, 110, 0.7);
+  color: #ffffff;
+  backdrop-filter: blur(4px);
+}
+
+.btn-gray:hover {
+  background-color: rgba(109, 109, 110, 0.45);
+  transform: scale(1.03);
+}
+
+/* Hero Right Controls (Mute & Maturity) */
+.hero-right-controls {
+  position: absolute;
+  right: 0;
+  bottom: 100px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-mute-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.hero-mute-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #fff;
+  transform: scale(1.05);
+}
+
+.hero-maturity-badge {
+  background: rgba(51, 51, 51, 0.6);
+  border-left: 3px solid #dcdcdc;
+  padding: 0.35rem 1.75rem 0.35rem 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* ==========================================
+   LIVE SEARCH RESULTS OVERLAY
+   ========================================== */
+.search-results-overlay {
+  display: none;
+  position: relative;
+  z-index: 10;
+  padding: 6rem 4% 4rem;
+  min-height: 80vh;
+  background-color: var(--bg-black);
+}
+
+.search-results-overlay.active {
+  display: block;
+}
+
+.search-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.search-query-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.search-query-title span {
+  color: var(--netflix-red);
+}
+
+.search-results-count {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.search-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem 1rem;
+}
+
+/* ==========================================
+   AUTHENTIC NETFLIX SUBNAV & CATEGORY FILTER BAR
+   ========================================== */
+.netflix-subnav {
+  position: sticky;
+  top: 68px;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 4%;
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.subnav-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+.subnav-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Netflix Genre Dropdown */
+.genre-dropdown-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.genre-dropdown-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #000;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.genre-dropdown-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #fff;
+}
+
+.genre-dropdown-btn svg {
+  transition: transform 0.25s ease;
+}
+
+.genre-dropdown-wrapper.open .genre-dropdown-btn svg {
+  transform: rotate(180deg);
+}
+
+.genre-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 520px;
+  max-width: 90vw;
+  background: rgba(18, 18, 18, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.85);
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 120;
+  backdrop-filter: blur(20px);
+}
+
+.genre-dropdown-wrapper.open .genre-dropdown-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.genre-dropdown-header {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.genre-dropdown-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.genre-option {
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: #ddd;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 8px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.genre-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding-left: 14px;
+}
+
+.genre-option.active {
+  background: rgba(229, 9, 20, 0.2);
+  color: #fff;
+  font-weight: 700;
+  border-left: 3px solid var(--netflix-red);
+}
+
+/* Category Quick Pills */
+.category-pills-container {
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.category-pills-container::-webkit-scrollbar {
+  display: none;
+}
+
+.category-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.cat-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ccc;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.cat-pill:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.cat-pill.active {
+  background: #fff;
+  color: #141414;
+  border-color: #fff;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+}
+
+/* View Mode Switcher */
+.subnav-right {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+.view-mode-toggle {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.view-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  padding: 6px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.view-btn:hover {
+  color: #fff;
+}
+
+.view-btn.active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+/* Section Header Explore Button */
+.section-explore-btn {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.section-explore-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Netflix Full Grid View */
+.category-grid-view {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2rem 1rem;
+  padding: 1rem 0 3rem;
+}
+
+.grid-category-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1rem;
+}
+
+.grid-category-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.grid-category-count {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.btn-dark {
+  background: rgba(109, 109, 110, 0.5);
+  color: #fff;
+}
+
+.btn-dark:hover {
+  background: rgba(109, 109, 110, 0.35);
+}
+
+/* ==========================================
+   MAIN CONTENT & ROWS
+   ========================================== */
+.content-container {
+  padding: 0 4% 4rem;
+  position: relative;
+  z-index: 5;
+}
+
+.media-section {
+  margin-bottom: 3.25rem;
+  position: relative;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.section-title:hover {
+  color: #ffffff;
+}
+
+.section-title svg {
+  width: 16px;
+  height: 16px;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.section-title:hover svg {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.section-accent-dot {
+  width: 4px;
+  height: 18px;
+  background: var(--netflix-red);
+  border-radius: 2px;
+}
+
+/* Swiper Container & Slider */
+.swiper {
+  width: 100%;
+  overflow: visible !important;
+  padding: 2.2rem 0 !important;
+  margin: -2.2rem 0 !important;
+}
+
+.swiper-slide {
+  height: auto;
+  transition: z-index 0.3s ease;
+}
+
+/* Netflix-Style Movie Title Below Card */
+.card-title-label {
+  margin-top: 6px;
+  padding: 0 2px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #e5e5e5;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.01em;
+  transition: color 0.2s ease;
+  max-width: 100%;
+}
+
+.swiper-slide:hover .card-title-label {
+  color: #ffffff;
+}
+
+/* Standard Netflix Card */
+.movie-card {
+  position: relative;
+  border-radius: 4px;
+  background-color: var(--card-bg);
+  cursor: pointer;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: transform var(--trans-smooth), box-shadow var(--trans-smooth), z-index var(--trans-smooth);
+}
+
+.movie-card-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+  background-color: #222;
+}
+
+.n-card-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  color: var(--netflix-red);
+  font-size: 1.15rem;
+  font-weight: 900;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+  z-index: 2;
+}
+
+/* Netflix Card Hover Popout */
+.movie-card-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  background: #181818;
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: center center;
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.movie-card:hover {
+  z-index: 40;
+}
+
+.movie-card:hover .movie-card-hover {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1.28) translateY(-14px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.95);
+}
+
+.hover-media {
+  position: relative;
+  width: 100%;
+  height: 52%;
+  overflow: hidden;
+}
+
+.hover-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hover-details {
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: #181818;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.hover-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.actions-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-btn-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(30, 30, 30, 0.8);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.icon-btn-circle:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.1);
+}
+
+.icon-btn-play {
+  background: #ffffff;
+  color: #000000;
+  border: none;
+}
+
+.icon-btn-play:hover {
+  background: rgba(255, 255, 255, 0.8);
+  color: #000;
+}
+
+.hover-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #fff;
+}
+
+.hover-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+}
+
+.hover-match {
+  color: var(--green-match);
+  font-weight: 700;
+}
+
+.hover-badge {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 0 4px;
+  font-size: 0.65rem;
+  color: #ccc;
+  border-radius: 2px;
+}
+
+.hover-duration {
+  color: #aaa;
+  font-weight: 500;
+}
+
+.hover-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.68rem;
+  color: #ddd;
+}
+
+.hover-genres span:not(:last-child)::after {
+  content: "•";
+  margin-left: 6px;
+  color: #666;
+}
+
+/* ==========================================
+   TOP 10 NUMBERED ROW STYLING
+   ========================================== */
+.top10-card {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 190px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.top10-card:hover {
+  transform: scale(1.06);
+  z-index: 10;
+}
+
+/* Iconic Netflix Giant Number */
+.top10-rank {
+  font-size: 155px;
+  font-weight: 900;
+  line-height: 0.8;
+  color: #0c0c0c;
+  -webkit-text-stroke: 4px #595959;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  letter-spacing: -18px;
+  margin-right: -18px;
+  z-index: 1;
+  font-family: 'Inter', sans-serif;
+  user-select: none;
+}
+
+.top10-poster-wrap {
+  width: 125px;
+  height: 185px;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+  background: #222;
+}
+
+.top10-poster-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.top10-n-tag {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  color: var(--netflix-red);
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+/* Swiper Navigation Controls */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #ffffff !important;
+  background: rgba(20, 20, 20, 0.75);
+  width: 44px !important;
+  height: 100% !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  margin: auto 0 !important;
+  opacity: 0;
+  transition: opacity 0.25s ease, background-color 0.2s ease;
+  z-index: 20 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.media-section:hover .swiper-button-next,
+.media-section:hover .swiper-button-prev {
+  opacity: 1;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: rgba(20, 20, 20, 0.95);
+}
+
+.swiper-button-prev {
+  left: -4% !important;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.swiper-button-next {
+  right: -4% !important;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 1.5rem !important;
+  font-weight: 900 !important;
+}
+
+/* ==========================================
+   DETAIL MODAL POPUP
+   ========================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  overflow-y: auto;
+  padding: 2.5rem 1rem;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-container {
+  background: var(--modal-bg);
+  width: 100%;
+  max-width: 850px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-modal);
+  transform: scale(0.94);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 2rem;
+}
+
+.modal-overlay.active .modal-container {
+  transform: scale(1);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #181818;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 15;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  transform: scale(1.1);
+  background: #2a2a2a;
+}
+
+.modal-hero {
+  position: relative;
+  height: 420px;
+  width: 100%;
+}
+
+.modal-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.modal-video-container {
+  position: absolute;
+  inset: 0;
+  display: none;
+  background: #000;
+  z-index: 5;
+}
+
+.modal-video-container.active {
+  display: block;
+}
+
+.modal-video-container iframe,
+.modal-video-container video {
+  width: 100%;
+  height: 100%;
+  border: none;
+  object-fit: cover;
+}
+
+.modal-hero-vignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(24, 24, 24, 0) 40%, #181818 100%);
+  z-index: 2;
+}
+
+.modal-hero-info {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 3rem;
+  z-index: 6;
+  max-width: 80%;
+}
+
+.modal-hero-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 1.25rem;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+.modal-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.modal-body {
+  padding: 1.5rem 3rem 3rem;
+  background: #181818;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.1fr;
+  gap: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.modal-meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.modal-match {
+  color: var(--green-match);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.modal-year {
+  color: #a3a3a3;
+  font-size: 0.95rem;
+}
+
+.modal-badge {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 1px 6px;
+  font-size: 0.75rem;
+  color: #fff;
+  border-radius: 2px;
+}
+
+.modal-hd-badge {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  font-size: 0.65rem;
+  padding: 1px 4px;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+.modal-synopsis {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #e5e5e5;
+}
+
+.modal-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  font-size: 0.85rem;
+}
+
+.modal-info-line {
+  line-height: 1.5;
+  color: #777;
+}
+
+.modal-info-line span {
+  color: #ddd;
+}
+
+/* Recommendations / More Like This */
+.modal-recommendations-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: #fff;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.rec-card {
+  background: #2f2f2f;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.rec-card:hover {
+  transform: scale(1.03);
+  background: #383838;
+}
+
+.rec-thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+}
+
+.rec-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rec-body {
+  padding: 0.85rem;
+}
+
+.rec-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.rec-match {
+  color: var(--green-match);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.rec-badge {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  font-size: 0.65rem;
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.rec-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+.rec-desc {
+  font-size: 0.75rem;
+  color: #aaa;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ==========================================
+   VIDEO PLAYER MODAL
+   ========================================== */
+.video-player-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-player-overlay.active {
+  display: flex;
+  animation: fadeIn 0.3s ease;
+}
+
+.video-player-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(30, 30, 30, 0.75);
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.video-player-close:hover {
+  transform: scale(1.1);
+  background: rgba(50, 50, 50, 0.9);
+}
+
+.video-player-wrapper {
+  width: 90vw;
+  max-width: 1200px;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.video-player-wrapper video,
+.video-player-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Toast Notifications */
+.toast-msg {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(20, 20, 20, 0.95);
+  color: #fff;
+  padding: 0.85rem 1.75rem;
+  border-radius: 30px;
+  border: 1px solid #444;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 3000;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.toast-msg.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ==========================================
+   FOOTER
+   ========================================== */
+.netflix-footer {
+  padding: 4rem 15% 3rem;
+  background-color: var(--bg-black);
+  border-top: 1px solid #222;
+  color: #757575;
+  font-size: 0.85rem;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.footer-socials a {
+  color: #fff;
+  transition: color 0.2s ease;
+}
+
+.footer-socials a:hover {
+  color: var(--netflix-red);
+}
+
+.footer-links-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.footer-links-grid a {
+  color: #757575;
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: color 0.2s ease;
+}
+
+.footer-links-grid a:hover {
+  text-decoration: underline;
+  color: #aaa;
+}
+
+.service-code-btn {
+  background: transparent;
+  border: 1px solid #757575;
+  color: #757575;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.service-code-btn:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+.footer-copy {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+/* ==========================================
+   ANIMATIONS & RESPONSIVENESS
+   ========================================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heroSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+  .modal-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .recommendations-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .footer-links-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+  .mobile-nav-toggle {
+    display: block;
+  }
+  .hero {
+    height: 70vh;
+    min-height: 480px;
+  }
+  .hero-title {
+    font-size: 2.2rem;
+  }
+  .hero-synopsis {
+    font-size: 0.9rem;
+  }
+  .hero-right-controls {
+    display: none;
+  }
+  .modal-hero {
+    height: 280px;
+  }
+  .modal-body {
+    padding: 1rem 1.5rem 2rem;
+  }
+  .modal-hero-info {
+    left: 1.5rem;
+    bottom: 1.5rem;
+  }
+  .modal-hero-title {
+    font-size: 1.8rem;
+  }
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-links-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .top10-rank {
+    font-size: 120px;
+    letter-spacing: -12px;
+    margin-right: -12px;
+  }
+  .netflix-subnav {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.65rem 4%;
+    top: 60px;
+  }
+  .subnav-left {
+    gap: 0.75rem;
+    width: 100%;
+  }
+  .subnav-title {
+    font-size: 1.25rem;
+  }
+  .genre-dropdown-menu {
+    width: 320px;
+  }
+  .genre-dropdown-grid {
+    grid-template-columns: 1fr;
+  }
+  .category-grid-view {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem 0.65rem;
+  }
+}
+
+/* ==========================================
+   IMAGE SHIMMER LOADING PLACEHOLDER
+   ========================================== */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.movie-card-thumb,
+.hover-media img,
+.top10-poster-wrap img,
+.modal-hero-img,
+.rec-thumb img {
+  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.movie-card-thumb[src],
+.hover-media img[src],
+.top10-poster-wrap img[src],
+.modal-hero-img[src],
+.rec-thumb img[src] {
+  animation: none;
+  background: none;
+}
+
+/* Image error fallback */
+.movie-card-thumb,
+.top10-poster-wrap img {
+  background-color: #1e1e1e;
+}
+
+/* Improve image rendering quality */
+img {
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
