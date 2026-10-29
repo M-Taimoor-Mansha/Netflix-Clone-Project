@@ -3411,19 +3411,19 @@ const movieDatabase = [
 // 2. CATEGORY CONFIGURATIONS
 // =========================================================================
 const categoriesConfig = [
-  { id: 'webseries', name: 'Famous TV Series & Binge Shows', shortName: 'TV Series', icon: '📺', isSeries: true },
-  { id: 'top10', name: 'Top 10 in Movies & TV Today', shortName: 'Top 10', icon: '🔥', isTop10: true },
-  { id: 'trending', name: 'Trending Now', shortName: 'Trending', icon: '⚡' },
+  { id: 'top10', name: 'Trending Now — Top 10 Today', shortName: 'Top 10', icon: '🔥', isTop10: true },
+  { id: 'webseries', name: 'Popular on Netflix', shortName: 'Popular', icon: '⭐', isSeries: true },
+  { id: 'scifi', name: 'Action & Sci-Fi Thrillers', shortName: 'Action & Sci-Fi', icon: '🚀', isMovie: true },
+  { id: 'trending', name: 'Top Rated Movies', shortName: 'Top Rated', icon: '🏆', isMovie: true },
+  { id: 'comedy', name: 'Comedies & Binge-Worthy TV Shows', shortName: 'Comedy', icon: '😂', isSeries: true },
+  { id: 'originals', name: 'Netflix Originals & Exclusives', shortName: 'Originals', icon: '🎬', isOriginal: true },
+  { id: 'action', name: 'Explosive Action & Blockbusters', shortName: 'Action', icon: '💥', isMovie: true },
   { id: 'horror', name: 'Horror & Dark Suspense Movies', shortName: 'Horror', icon: '👻', isMovie: true },
-  { id: 'scifi', name: 'Sci-Fi & Mind-Bending Fiction Movies', shortName: 'Sci-Fi & Fiction', icon: '🚀', isMovie: true },
-  { id: 'anime', name: 'Anime & Japanese Animation', shortName: 'Anime', icon: '⚔️', isAnime: true },
-  { id: 'action', name: 'Action & Adventure Blockbusters', shortName: 'Action', icon: '💥', isMovie: true },
   { id: 'thrillers', name: 'Mind-Twisting Thrillers & Mystery', shortName: 'Thrillers', icon: '🔍', isMovie: true },
-  { id: 'originals', name: 'Netflix Originals & Exclusives', shortName: 'Originals', icon: '✨', isOriginal: true },
-  { id: 'comedy', name: 'Binge-Worthy Comedies & Sitcoms', shortName: 'Comedy', icon: '😂', isSeries: true },
   { id: 'romance', name: 'Romance & Romantic Dramas', shortName: 'Romance', icon: '❤️', isMovie: true },
   { id: 'dramas', name: 'Critically Acclaimed TV Dramas', shortName: 'Dramas', icon: '🎭', isSeries: true },
-  { id: 'docs', name: 'Documentaries & Real Life', shortName: 'Documentaries', icon: '🌍' }
+  { id: 'docs', name: 'Documentaries & Real Life', shortName: 'Documentaries', icon: '🌍' },
+  { id: 'anime', name: 'Anime & Japanese Animation', shortName: 'Anime', icon: '⚔️', isAnime: true }
 ];
 
 // Featured titles to cycle on Hero Billboard
@@ -3527,40 +3527,142 @@ function playNetflixTaDum() {
 }
 
 // =========================================================================
-// 5. POSTER FALLBACK GENERATOR
+// 5. POSTER FALLBACK GENERATOR  — rich category-themed SVG cards
 // =========================================================================
-function getFallbackPoster(title, isVertical = false) {
-  const safeTitle = (title || 'Netflix Original').replace(/'/g, '').replace(/"/g, '');
-  const width = isVertical ? 300 : 420;
-  const height = isVertical ? 450 : 236;
 
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-    <defs>
-      <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#262626"/>
-        <stop offset="40%" stop-color="#181818"/>
-        <stop offset="100%" stop-color="#0e0e0e"/>
-      </linearGradient>
-      <radialGradient id="cardGlow" cx="50%" cy="38%" r="60%">
-        <stop offset="0%" stop-color="#e50914" stop-opacity="0.38"/>
-        <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
-      </radialGradient>
-    </defs>
-    <rect width="${width}" height="${height}" fill="url(#bgGrad)"/>
-    <rect width="${width}" height="${height}" fill="url(#cardGlow)"/>
-    <path d="M${width/2 - 16} ${height/2 - 38} v76 l32 -76 v76" fill="none" stroke="#e50914" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="${width/2}" y="${height - 24}" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="700" font-size="${isVertical ? 15 : 13}" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">
-      ${safeTitle}
-    </text>
-  </svg>`;
+/**
+ * Theme palette map: category → { bg1, bg2, glow1, glow2, accent, label }
+ * bg1/bg2  = linear-gradient stops (dark base)
+ * glow1    = radial glow center colour
+ * glow2    = radial glow mid colour (or same as glow1)
+ * accent   = N-mark + badge border colour
+ * label    = short genre tag shown in top-right corner
+ */
+const CATEGORY_THEMES = {
+  scifi:     { bg1:'#030712', bg2:'#0f172a', glow1:'#0ea5e9', glow2:'#38bdf8', accent:'#38bdf8', label:'SCI-FI'     },
+  action:    { bg1:'#09090b', bg2:'#18181b', glow1:'#ef4444', glow2:'#f97316', accent:'#ef4444', label:'ACTION'     },
+  top10:     { bg1:'#0c0a09', bg2:'#1c1917', glow1:'#e50914', glow2:'#eab308', accent:'#e50914', label:'TOP 10'     },
+  webseries: { bg1:'#0f172a', bg2:'#1e293b', glow1:'#e50914', glow2:'#60a5fa', accent:'#60a5fa', label:'SERIES'     },
+  horror:    { bg1:'#0c0505', bg2:'#2a0a0a', glow1:'#b91c1c', glow2:'#7f1d1d', accent:'#ef4444', label:'HORROR'     },
+  anime:     { bg1:'#0f051d', bg2:'#240a3d', glow1:'#d946ef', glow2:'#06b6d4', accent:'#d946ef', label:'ANIME'      },
+  romance:   { bg1:'#18050e', bg2:'#36091d', glow1:'#fb7185', glow2:'#f43f5e', accent:'#fb7185', label:'ROMANCE'    },
+  comedy:    { bg1:'#09090b', bg2:'#1e1b4b', glow1:'#facc15', glow2:'#a855f7', accent:'#facc15', label:'COMEDY'     },
+  docs:      { bg1:'#021814', bg2:'#064e3b', glow1:'#10b981', glow2:'#34d399', accent:'#10b981', label:'DOCS'       },
+  dramas:    { bg1:'#0f0a1e', bg2:'#1e1040', glow1:'#818cf8', glow2:'#6366f1', accent:'#818cf8', label:'DRAMA'      },
+  thrillers: { bg1:'#0c0b09', bg2:'#1c1917', glow1:'#f59e0b', glow2:'#d97706', accent:'#f59e0b', label:'THRILLER'   },
+  trending:  { bg1:'#09090b', bg2:'#18181b', glow1:'#e50914', glow2:'#f97316', accent:'#e50914', label:'TRENDING'   },
+  originals: { bg1:'#0e0c1a', bg2:'#1a1530', glow1:'#e50914', glow2:'#a855f7', accent:'#e50914', label:'ORIGINAL'   },
+  default:   { bg1:'#141414', bg2:'#1c1c1c', glow1:'#e50914', glow2:'#e50914', accent:'#e50914', label:'NETFLIX'    },
+};
+
+function getFallbackPoster(title, isVertical = false, category = 'default') {
+  const safeTitle  = (title || 'Netflix Original').replace(/['"<>&]/g, c => ({'\'':'&#39;','"':'&quot;','<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+  const w          = isVertical ? 300 : 420;
+  const h          = isVertical ? 450 : 236;
+  const theme      = CATEGORY_THEMES[category] || CATEGORY_THEMES.default;
+
+  // Font sizing — shrink long titles gracefully
+  const rawLen     = (title || '').length;
+  const fontSize   = isVertical
+    ? (rawLen > 22 ? 12 : rawLen > 14 ? 15 : 18)
+    : (rawLen > 28 ? 10 : rawLen > 18 ? 12 : 14);
+
+  // N-mark position (top-left letterbox)
+  const nx = 14, ny = 14, nw = 28, nh = 38;
+
+  // Unique gradient IDs per invocation to avoid SVG namespace collisions
+  const uid = Math.random().toString(36).slice(2, 7);
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+  <defs>
+    <linearGradient id="bg${uid}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="${theme.bg1}"/>
+      <stop offset="100%" stop-color="${theme.bg2}"/>
+    </linearGradient>
+    <radialGradient id="gl${uid}" cx="50%" cy="40%" r="62%">
+      <stop offset="0%"   stop-color="${theme.glow1}" stop-opacity="0.45"/>
+      <stop offset="55%"  stop-color="${theme.glow2}" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#000000"        stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bo${uid}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="${theme.glow1}" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="${theme.glow2}" stop-opacity="0.2"/>
+    </linearGradient>
+    <filter id="glow${uid}" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="${w}" height="${h}" fill="url(#bg${uid})" rx="4"/>
+  <rect width="${w}" height="${h}" fill="url(#gl${uid})" rx="4"/>
+
+  <!-- Subtle border -->
+  <rect width="${w}" height="${h}" fill="none" stroke="url(#bo${uid})" stroke-width="1.2" rx="4" opacity="0.5"/>
+
+  <!-- Scanline texture (light horizontal lines) -->
+  ${Array.from({length: Math.floor(h/6)}, (_, i) =>
+    `<line x1="0" y1="${i*6}" x2="${w}" y2="${i*6}" stroke="#ffffff" stroke-opacity="0.018" stroke-width="1"/>`
+  ).join('')}
+
+  <!-- Netflix N-mark (top-left) -->
+  <g filter="url(#glow${uid})">
+    <text x="${nx}" y="${ny + nh - 6}"
+      font-family="Arial Black, Arial, sans-serif"
+      font-weight="900" font-size="${nh}"
+      fill="${theme.accent}" opacity="0.92"
+      letter-spacing="-2">N</text>
+  </g>
+
+  <!-- Category label badge (top-right) -->
+  <rect x="${w - 66}" y="11" width="56" height="17" rx="3"
+    fill="${theme.glow1}" fill-opacity="0.18"
+    stroke="${theme.glow1}" stroke-opacity="0.55" stroke-width="0.8"/>
+  <text x="${w - 38}" y="23"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif"
+    font-weight="700" font-size="8.5"
+    fill="${theme.glow1}" text-anchor="middle" letter-spacing="1.2">
+    ${theme.label}
+  </text>
+
+  <!-- Centered title text -->
+  <text x="${w/2}" y="${h/2 + (isVertical ? 10 : 6)}"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+    font-weight="800" font-size="${fontSize}"
+    fill="#ffffff" text-anchor="middle"
+    dominant-baseline="middle" letter-spacing="0.6">
+    ${safeTitle.length > 32 ? safeTitle.slice(0, 30) + '…' : safeTitle}
+  </text>
+
+  <!-- Bottom-left: 4K badge + match score -->
+  <rect x="10" y="${h - 28}" width="26" height="14" rx="2"
+    fill="none" stroke="${theme.accent}" stroke-width="1" stroke-opacity="0.7"/>
+  <text x="23" y="${h - 17}"
+    font-family="Arial, sans-serif" font-weight="700" font-size="7.5"
+    fill="${theme.accent}" text-anchor="middle" letter-spacing="0.5">4K</text>
+  <text x="44" y="${h - 17}"
+    font-family="Arial, sans-serif" font-weight="600" font-size="8"
+    fill="#22c55e" letter-spacing="0.3">98% Match</text>
+
+  <!-- Bottom-right: NETFLIX label -->
+  <text x="${w - 10}" y="${h - 17}"
+    font-family="Arial Black, Arial, sans-serif"
+    font-weight="900" font-size="9"
+    fill="#e50914" text-anchor="end" letter-spacing="1.5" opacity="0.7">NETFLIX</text>
+</svg>`;
 
   return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 
-function handleImageError(img, title, isVertical = false) {
+/**
+ * handleImageError — called from every <img onerror> in movie cards.
+ * Now accepts an optional category to theme the fallback SVG.
+ */
+function handleImageError(img, title, isVertical = false, category = 'default') {
   if (!img || img.dataset.errorHandled) return;
   img.dataset.errorHandled = 'true';
-  img.src = getFallbackPoster(title, isVertical);
+  img.src = getFallbackPoster(title, isVertical, category);
 }
 
 // =========================================================================
@@ -3617,13 +3719,33 @@ function updateHeroBillboard() {
   const heroImg = document.getElementById('heroBackdropImg');
   const heroTitle = document.getElementById('heroTitle');
   const heroSynopsis = document.getElementById('heroSynopsis');
+  const heroMatch = document.getElementById('heroMatch');
+  const heroYear = document.getElementById('heroYear');
+  const heroAge = document.getElementById('heroAge');
+  const heroDuration = document.getElementById('heroDuration');
+  const heroQuality = document.getElementById('heroQuality');
+  const heroTypeBadge = document.getElementById('heroTypeBadge');
+  const heroTop10Text = document.getElementById('heroTop10Text');
+  const heroMaturityBadge = document.getElementById('heroMaturityBadge');
 
   if (heroImg) {
-    heroImg.onerror = () => handleImageError(heroImg, heroMovie.title, false);
+    heroImg.onerror = () => handleImageError(heroImg, heroMovie.title, false, heroMovie.category);
     heroImg.src = heroMovie.backdrop;
   }
   if (heroTitle) heroTitle.textContent = heroMovie.title.toUpperCase();
   if (heroSynopsis) heroSynopsis.textContent = heroMovie.description;
+  if (heroMatch) heroMatch.textContent = heroMovie.match || '98% Match';
+  if (heroYear) heroYear.textContent = heroMovie.year || '2024';
+  if (heroAge) heroAge.textContent = heroMovie.ageRating || 'TV-MA';
+  if (heroDuration) heroDuration.textContent = heroMovie.duration || '1h 55m';
+  if (heroQuality) heroQuality.textContent = heroMovie.quality || '4K Ultra HD';
+  
+  const isSeries = (heroMovie.category === 'webseries' || heroMovie.duration?.includes('Season') || heroMovie.duration?.includes('Parts'));
+  if (heroTypeBadge) heroTypeBadge.textContent = isSeries ? 'SERIES' : 'FILM';
+  if (heroTop10Text) {
+    heroTop10Text.textContent = `#${(currentHeroIndex % 10) + 1} in ${isSeries ? 'TV Shows' : 'Movies'} Today`;
+  }
+  if (heroMaturityBadge) heroMaturityBadge.textContent = heroMovie.ageRating || '16+';
 }
 
 // =========================================================================
@@ -3685,10 +3807,27 @@ function createStandardMovieCard(movie) {
   const thumbImg = card.querySelector('.movie-card-thumb');
   const hoverImg = card.querySelector('.hover-media img');
   if (thumbImg) {
-    thumbImg.onerror = () => handleImageError(thumbImg, movie.title, false);
+    thumbImg.onerror = () => handleImageError(thumbImg, movie.title, false, movie.category);
   }
   if (hoverImg) {
-    hoverImg.onerror = () => handleImageError(hoverImg, movie.title, false);
+    hoverImg.onerror = () => handleImageError(hoverImg, movie.title, false, movie.category);
+  }
+
+  // Calculate dynamic transform origin to prevent edge clipping
+  const movieCard = card.querySelector('.movie-card');
+  const hoverCard = card.querySelector('.movie-card-hover');
+  if (movieCard && hoverCard) {
+    movieCard.addEventListener('mouseenter', () => {
+      const rect = movieCard.getBoundingClientRect();
+      const margin = 70;
+      if (rect.left < margin) {
+        hoverCard.style.transformOrigin = 'left center';
+      } else if (window.innerWidth - rect.right < margin) {
+        hoverCard.style.transformOrigin = 'right center';
+      } else {
+        hoverCard.style.transformOrigin = 'center center';
+      }
+    });
   }
 
   attachCardEvents(card, movie);
@@ -3711,7 +3850,7 @@ function createTop10Card(movie) {
 
   const posterImg = card.querySelector('.top10-poster-wrap img');
   if (posterImg) {
-    posterImg.onerror = () => handleImageError(posterImg, movie.title, true);
+    posterImg.onerror = () => handleImageError(posterImg, movie.title, true, movie.category);
   }
 
   card.addEventListener('click', () => {
@@ -4287,13 +4426,81 @@ function setupSearchEngine() {
 }
 
 // =========================================================================
-// 12. DETAIL MODAL & RECOMMENDATIONS
+// 12. METADATA HELPERS: CREATORS, ADVISORIES & EPISODES
+// =========================================================================
+const creatorsMap = {
+  'stranger-things-ws': 'The Duffer Brothers',
+  'breaking-bad-ws': 'Vince Gilligan',
+  'game-of-thrones': 'David Benioff, D.B. Weiss',
+  'money-heist': 'Álex Pina',
+  'squid-game-ws': 'Hwang Dong-hyuk',
+  'arcane': 'Christian Linke, Alex Yee',
+  'dune-part-two': 'Denis Villeneuve',
+  'oppenheimer': 'Christopher Nolan',
+  'the-batman': 'Matt Reeves',
+  'peaky-blinders': 'Steven Knight',
+  'dark': 'Baran bo Odar, Jantje Friese',
+  'the-witcher': 'Lauren Schmidt Hissrich',
+  'the-queens-gambit': 'Scott Frank, Allan Scott',
+  'attack-on-titan': 'Hajime Isayama (Tetsuro Araki)',
+  'demon-slayer': 'Haruo Sotozaki',
+  'shutter-island': 'Martin Scorsese',
+  'inception': 'Christopher Nolan',
+  'interstellar': 'Christopher Nolan',
+  'avatar-way-of-water': 'James Cameron',
+  'top-gun-maverick': 'Joseph Kosinski',
+  'spider-man-across-spider-verse': 'Joaquim Dos Santos, Kemp Powers'
+};
+
+function getMovieCreator(movie) {
+  if (creatorsMap[movie.id]) return creatorsMap[movie.id];
+  const isSeries = movie.isSeries || movie.duration?.includes('Season') || movie.duration?.includes('Parts');
+  if (isSeries) {
+    return `${movie.cast[0] || 'Original Showrunner'} (Creator & Showrunner)`;
+  }
+  return `${movie.cast[0] || 'Acclaimed Director'} (Director)`;
+}
+
+function getMovieAdvisory(movie) {
+  const age = movie.ageRating || '16+';
+  if (age === 'TV-MA' || age === '18+' || age === 'R') {
+    return 'Suitable for mature audiences. Crude language, intense violence, psychological thriller scenes, dark mature themes.';
+  } else if (age === 'TV-14' || age === 'PG-13' || age === '16+') {
+    return 'Parents strongly cautioned. Moderate action violence, suggestive dialogue, and thematic suspense.';
+  }
+  return 'General audiences. Mild comedic action and fantasy suspense.';
+}
+
+function getMovieEpisodes(movie) {
+  const isSeries = movie.isSeries || movie.duration?.includes('Season') || movie.duration?.includes('Parts');
+  if (!isSeries) return [];
+
+  const episodeTemplates = [
+    { title: 'Chapter One: The Awakening', duration: '54m', desc: 'An unexpected event triggers a series of mysterious discoveries across the town, leaving everyone searching for answers.' },
+    { title: 'Chapter Two: Dangerous Territory', duration: '51m', desc: 'Alliances are tested as secrets from the past resurface under intense scrutiny, and tensions mount.' },
+    { title: 'Chapter Three: The Crossroads', duration: '58m', desc: 'A daring rescue mission is set in motion amidst mounting opposition, with little time to spare.' },
+    { title: 'Chapter Four: The Reckoning', duration: '62m', desc: 'Hidden truths come to light in an electrifying showdown that alters everything forever.' }
+  ];
+
+  return episodeTemplates.map((ep, idx) => ({
+    number: idx + 1,
+    title: ep.title,
+    duration: ep.duration,
+    description: `${movie.title} reaches a fever pitch. ${ep.desc}`,
+    thumb: movie.backdrop || movie.poster,
+    progress: Math.floor(Math.random() * 70) + 20
+  }));
+}
+
+// =========================================================================
+// 13. DETAIL MODAL & RECOMMENDATIONS
 // =========================================================================
 function setupDetailModal() {
   const modal = document.getElementById('movieModal');
   const closeBtn = document.getElementById('modalCloseBtn');
   const playBtn = document.getElementById('modalPlayBtn');
   const listBtn = document.getElementById('modalListBtn');
+  const likeBtn = document.getElementById('modalLikeBtn');
 
   if (closeBtn) {
     closeBtn.addEventListener('click', closeModal);
@@ -4329,6 +4536,41 @@ function setupDetailModal() {
       }
     });
   }
+
+  if (likeBtn) {
+    likeBtn.addEventListener('click', () => {
+      if (activeModalMovie) {
+        likeBtn.classList.toggle('liked');
+        const isLiked = likeBtn.classList.contains('liked');
+        showToast(isLiked ? `Liked "${activeModalMovie.title}"` : `Rating cleared for "${activeModalMovie.title}"`);
+      }
+    });
+  }
+
+  setupModalTabs();
+}
+
+function setupModalTabs() {
+  document.querySelectorAll('.modal-tab-btn').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.getAttribute('data-tab');
+      switchModalTab(target);
+    });
+  });
+}
+
+function switchModalTab(tabName) {
+  document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-tab') === tabName);
+  });
+
+  const epPanel = document.getElementById('tabEpisodesPanel');
+  const simPanel = document.getElementById('tabSimilarPanel');
+  const aboutPanel = document.getElementById('tabAboutPanel');
+
+  if (epPanel) epPanel.classList.toggle('active', tabName === 'episodes');
+  if (simPanel) simPanel.classList.toggle('active', tabName === 'similar');
+  if (aboutPanel) aboutPanel.classList.toggle('active', tabName === 'about');
 }
 
 function openModal(movie) {
@@ -4345,37 +4587,168 @@ function openModal(movie) {
   const quality = document.getElementById('modalQuality');
   const synopsis = document.getElementById('modalSynopsis');
   const cast = document.getElementById('modalCast');
+  const creators = document.getElementById('modalCreators');
   const genres = document.getElementById('modalGenres');
-  const category = document.getElementById('modalCategory');
+  const tags = document.getElementById('modalTags');
+  const advisory = document.getElementById('modalAdvisoryText');
+  const tabAboutTitle = document.getElementById('tabAboutTitle');
+  const episodesAgeBadge = document.getElementById('episodesAgeBadge');
 
   if (heroImg) {
-    heroImg.onerror = () => handleImageError(heroImg, movie.title, false);
+    heroImg.onerror = () => handleImageError(heroImg, movie.title, false, movie.category);
     heroImg.src = movie.backdrop;
   }
   if (title) title.textContent = movie.title;
-  if (match) match.textContent = movie.match;
-  if (year) year.textContent = movie.year;
-  if (age) age.textContent = movie.ageRating;
-  if (duration) duration.textContent = movie.duration;
-  if (quality) quality.textContent = movie.quality;
+  if (match) match.textContent = movie.match || '98% Match';
+  if (year) year.textContent = movie.year || '2024';
+  if (age) age.textContent = movie.ageRating || 'TV-MA';
+  if (duration) duration.textContent = movie.duration || '2h 10m';
+  if (quality) quality.textContent = movie.quality || '4K Ultra HD';
   if (synopsis) synopsis.textContent = movie.description;
-  if (cast) cast.textContent = movie.cast.join(', ');
-  if (genres) genres.textContent = movie.genres.join(', ');
-  if (category) category.textContent = movie.categoryName;
+  if (cast) cast.textContent = movie.cast ? movie.cast.join(', ') : 'Ensemble Cast';
+  if (creators) creators.textContent = getMovieCreator(movie);
+  if (genres) genres.textContent = movie.genres ? movie.genres.join(', ') : 'Drama';
+  if (tags) tags.textContent = movie.genres ? movie.genres.slice(0, 3).join(' • ') : 'Exciting';
+  if (advisory) advisory.textContent = getMovieAdvisory(movie);
+  if (tabAboutTitle) tabAboutTitle.textContent = movie.title;
+  if (episodesAgeBadge) episodesAgeBadge.textContent = movie.ageRating || 'TV-MA';
+
+  // Handle inline video preview inside modal hero
+  const modalHeroVideo = document.getElementById('modalHeroVideoContainer');
+  const modalHeroIframe = document.getElementById('modalHeroVideoIframe');
+  const modalTrailerPreviewBtn = document.getElementById('modalTrailerPreviewBtn');
+  const modalHeroVideoClose = document.getElementById('modalHeroVideoClose');
+
+  if (modalHeroVideo && modalHeroIframe) {
+    modalHeroIframe.src = '';
+    modalHeroVideo.classList.remove('open', 'active');
+  }
+
+  if (modalTrailerPreviewBtn) {
+    modalTrailerPreviewBtn.onclick = () => {
+      if (modalHeroVideo && modalHeroIframe) {
+        modalHeroIframe.src = movie.trailerUrl;
+        modalHeroVideo.classList.add('open', 'active');
+      }
+    };
+  }
+
+  if (modalHeroVideoClose) {
+    modalHeroVideoClose.onclick = () => {
+      if (modalHeroVideo && modalHeroIframe) {
+        modalHeroIframe.src = '';
+        modalHeroVideo.classList.remove('open', 'active');
+      }
+    };
+  }
+
+  // Populate Episodes
+  const isSeries = movie.isSeries || movie.duration?.includes('Season') || movie.duration?.includes('Parts');
+  const tabEpisodesBtn = document.getElementById('tabEpisodesBtn');
+  const episodesList = document.getElementById('modalEpisodesList');
+
+  if (tabEpisodesBtn) {
+    if (isSeries) {
+      tabEpisodesBtn.style.display = 'block';
+      switchModalTab('episodes');
+    } else {
+      tabEpisodesBtn.style.display = 'none';
+      switchModalTab('similar');
+    }
+  }
+
+  if (episodesList && isSeries) {
+    episodesList.innerHTML = '';
+    const eps = getMovieEpisodes(movie);
+    eps.forEach(ep => {
+      const item = document.createElement('div');
+      item.className = 'episode-item';
+      item.innerHTML = `
+        <div class="ep-num">${ep.number}</div>
+        <div class="ep-thumb-wrap">
+          <img src="${ep.thumb}" alt="${ep.title}" loading="lazy" />
+          <div class="ep-play-overlay">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="ep-details">
+          <div class="ep-header-line">
+            <span class="ep-title">${ep.title}</span>
+            <span class="ep-duration">${ep.duration}</span>
+          </div>
+          <p class="ep-synopsis">${ep.description}</p>
+          <div class="ep-progress-bar">
+            <div class="ep-progress-fill" style="width: ${ep.progress}%"></div>
+          </div>
+        </div>
+      `;
+      item.addEventListener('click', () => {
+        playNetflixTaDum();
+        openTrailerPlayer(movie);
+      });
+      episodesList.appendChild(item);
+    });
+  }
+
+  // Populate About
+  const aboutGrid = document.getElementById('modalAboutGrid');
+  if (aboutGrid) {
+    aboutGrid.innerHTML = `
+      <div class="about-row">
+        <span class="about-label">Director / Creator:</span>
+        <span class="about-value">${getMovieCreator(movie)}</span>
+      </div>
+      <div class="about-row">
+        <span class="about-label">Cast:</span>
+        <span class="about-value">${movie.cast ? movie.cast.join(', ') : 'Ensemble'}</span>
+      </div>
+      <div class="about-row">
+        <span class="about-label">Genres:</span>
+        <span class="about-value">${movie.genres ? movie.genres.join(', ') : 'Drama'}</span>
+      </div>
+      <div class="about-row">
+        <span class="about-label">Maturity Rating:</span>
+        <span class="about-value">${movie.ageRating} — ${getMovieAdvisory(movie)}</span>
+      </div>
+      <div class="about-row">
+        <span class="about-label">Audio:</span>
+        <span class="about-value">English [Original], Dolby Atmos 5.1, Spanish, French, German, Japanese</span>
+      </div>
+      <div class="about-row">
+        <span class="about-label">Subtitles:</span>
+        <span class="about-value">English, Spanish, French, German, Japanese, Simplified Chinese</span>
+      </div>
+    `;
+  }
 
   updateModalListButton();
   renderModalRecommendations(movie);
 
   if (modal) {
-    modal.classList.add('open');
+    modal.classList.add('open', 'active');
     document.body.style.overflow = 'hidden';
+  }
+}
+
+function openModalById(movieId) {
+  const movie = movieDatabase.find(m => m.id === movieId);
+  if (movie) {
+    openModal(movie);
+  } else {
+    showToast('Movie details not found.');
   }
 }
 
 function closeModal() {
   const modal = document.getElementById('movieModal');
+  const modalHeroIframe = document.getElementById('modalHeroVideoIframe');
+  const modalHeroVideo = document.getElementById('modalHeroVideoContainer');
+
+  if (modalHeroIframe) modalHeroIframe.src = '';
+  if (modalHeroVideo) modalHeroVideo.classList.remove('open', 'active');
+
   if (modal) {
-    modal.classList.remove('open');
+    modal.classList.remove('open', 'active');
     document.body.style.overflow = '';
   }
   activeModalMovie = null;
@@ -4401,7 +4774,6 @@ function renderModalRecommendations(activeMovie) {
   if (!container) return;
   container.innerHTML = '';
 
-  // Find other movies from the same category or sharing genres
   let recs = movieDatabase
     .filter(m => m.id !== activeMovie.id && (m.category === activeMovie.category || m.genres.some(g => activeMovie.genres.includes(g))))
     .slice(0, 6);
@@ -4431,7 +4803,7 @@ function renderModalRecommendations(activeMovie) {
     `;
 
     const img = card.querySelector('.rec-thumb img');
-    if (img) img.onerror = () => handleImageError(img, rec.title, false);
+    if (img) img.onerror = () => handleImageError(img, rec.title, false, rec.category);
 
     card.addEventListener('click', () => {
       openModal(rec);
@@ -4442,7 +4814,7 @@ function renderModalRecommendations(activeMovie) {
 }
 
 // =========================================================================
-// 13. VIDEO TRAILER PLAYER
+// 14. VIDEO TRAILER PLAYER
 // =========================================================================
 function setupTrailerPlayer() {
   const closeBtn = document.getElementById('videoPlayerCloseBtn');
@@ -4462,10 +4834,12 @@ function setupTrailerPlayer() {
 function openTrailerPlayer(movie) {
   const overlay = document.getElementById('videoPlayerOverlay');
   const iframe = document.getElementById('trailerIframe');
+  const title = document.getElementById('videoPlayerTitle');
   if (!overlay || !iframe || !movie) return;
 
+  if (title) title.textContent = `${movie.title} — Official Trailer`;
   iframe.src = movie.trailerUrl;
-  overlay.classList.add('open');
+  overlay.classList.add('open', 'active');
   document.body.style.overflow = 'hidden';
 }
 
@@ -4473,20 +4847,22 @@ function closeTrailerPlayer() {
   const overlay = document.getElementById('videoPlayerOverlay');
   const iframe = document.getElementById('trailerIframe');
   if (iframe) iframe.src = '';
-  if (overlay) overlay.classList.remove('open');
+  if (overlay) overlay.classList.remove('open', 'active');
   document.body.style.overflow = '';
 }
 
 // =========================================================================
-// 14. NAVBAR & USER CONTROLS
+// 15. NAVBAR & USER CONTROLS
 // =========================================================================
 function setupNavbarAndInteractivity() {
   const navbar = document.getElementById('navbar');
   const logo = document.getElementById('netflixLogo');
   const notifBtn = document.getElementById('notifBtn');
   const notifDropdown = document.getElementById('notificationsDropdown');
+  const kidsBtn = document.getElementById('kidsNavBtn');
+  const serviceCodeBtn = document.getElementById('serviceCodeBtn');
 
-  // Sticky Navbar background on scroll
+  // Sticky Navbar background on scroll (> 50px)
   window.addEventListener('scroll', () => {
     if (window.scrollY > 40) {
       navbar.classList.add('scrolled');
@@ -4507,6 +4883,27 @@ function setupNavbarAndInteractivity() {
       updateSubnavState();
       renderMainContent();
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // Kids link
+  if (kidsBtn) {
+    kidsBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      currentNav = 'browse';
+      activeCategoryFilter = 'anime';
+      updateSubnavState();
+      renderMainContent();
+      showToast('Browsing Family & Anime Hits');
+      window.scrollTo({ top: 350, behavior: 'smooth' });
+    });
+  }
+
+  // Service Code
+  if (serviceCodeBtn) {
+    serviceCodeBtn.addEventListener('click', () => {
+      const code = Math.floor(100000 + Math.random() * 900000);
+      showToast(`Service Code: ${code}`);
     });
   }
 
@@ -4546,11 +4943,73 @@ function setupNavbarAndInteractivity() {
 }
 
 function updateNavActiveState() {
-  document.querySelectorAll('.nav-links a').forEach(l => {
+  document.querySelectorAll('.nav-links a, .mobile-nav-links a').forEach(l => {
     if (l.getAttribute('data-nav') === currentNav) {
       l.classList.add('active');
     } else {
       l.classList.remove('active');
+    }
+  });
+}
+
+// =========================================================================
+// 16. MOBILE NAVIGATION DRAWER
+// =========================================================================
+function setupMobileNav() {
+  const toggleBtn = document.getElementById('mobileNavToggle');
+  const drawer = document.getElementById('mobileNavDrawer');
+  if (!toggleBtn || !drawer) return;
+
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleBtn.classList.toggle('open');
+    drawer.classList.toggle('open');
+  });
+
+  document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = link.getAttribute('data-nav');
+      currentNav = target;
+      activeCategoryFilter = 'all';
+
+      toggleBtn.classList.remove('open');
+      drawer.classList.remove('open');
+
+      updateNavActiveState();
+      updateSubnavState();
+      renderMainContent();
+
+      if (target === 'home') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 380, behavior: 'smooth' });
+      }
+    });
+  });
+
+  window.addEventListener('click', (e) => {
+    if (!drawer.contains(e.target) && !toggleBtn.contains(e.target)) {
+      toggleBtn.classList.remove('open');
+      drawer.classList.remove('open');
+    }
+  });
+}
+
+// =========================================================================
+// 17. KEYBOARD SHORTCUTS
+// =========================================================================
+function setupKeyboardShortcuts() {
+  window.addEventListener('keydown', (e) => {
+    // Press '/' to focus search input
+    if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+      e.preventDefault();
+      const searchBox = document.getElementById('searchBox');
+      const searchInput = document.getElementById('searchInput');
+      if (searchBox && searchInput) {
+        searchBox.classList.add('active');
+        searchInput.focus();
+      }
     }
   });
 }
@@ -4576,8 +5035,17 @@ function showToast(message) {
   }, 3200);
 }
 
+// Global scope bindings for inline HTML onclick handlers
+window.openModal = openModal;
+window.openModalById = openModalById;
+window.closeModal = closeModal;
+window.playNetflixTaDum = playNetflixTaDum;
+window.switchToCategoryGrid = switchToCategoryGrid;
+window.openTrailerPlayer = openTrailerPlayer;
+window.closeTrailerPlayer = closeTrailerPlayer;
+
 // =========================================================================
-// 15. INITIALIZE APPLICATION
+// 18. INITIALIZE APPLICATION
 // =========================================================================
 document.addEventListener('DOMContentLoaded', () => {
   setupHeroBillboard();
@@ -4587,4 +5055,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDetailModal();
   setupTrailerPlayer();
   setupNavbarAndInteractivity();
+  setupMobileNav();
+  setupKeyboardShortcuts();
 });

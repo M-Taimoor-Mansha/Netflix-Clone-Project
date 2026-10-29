@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Netflix - Watch TV Shows Online, Watch Movies Online</title>
-  <meta name="description" content="Watch Netflix movies & TV shows online or stream right to your smart TV, game console, PC, Mac, mobile, tablet and more." />
+  <title>Netflix Clone - Watch TV Shows Online, Watch Movies Online</title>
+  <meta name="description" content="Pixel-Perfect 1:1 Netflix Web Platform replica featuring 117+ titles, live TMDB streaming trailers, Swiper carousel rails, dynamic search, interactive modal, and Web Audio API Netflix Ta-Dum sound." />
   <meta name="theme-color" content="#141414" />
   
   <!-- Netflix Favicon -->
@@ -28,7 +28,14 @@
        ========================================== -->
   <header class="navbar" id="navbar">
     <div class="nav-left">
-      <!-- Official Netflix Logo -->
+      <!-- Mobile Hamburger Toggle -->
+      <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Open mobile navigation menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+
+      <!-- Official Netflix Logo in bold red SVG typography -->
       <a href="#" class="netflix-logo" id="netflixLogo" title="Netflix Home" aria-label="Netflix Home">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 276.742" class="netflix-logo-svg" role="img" aria-label="Netflix">
           <path d="M140.803 258.904c-15.404 2.705-31.079 3.516-47.294 5.676l-49.458-144.856v151.073c-15.404 1.621-29.457 3.783-44.051 5.945v-276.742h41.08l56.212 157.021v-157.021h43.511v258.904zm85.131-157.558c16.757 0 42.431-.811 57.835-.811v43.24c-19.189 0-41.619 0-57.835.811v64.322c25.405-1.621 50.809-3.785 76.482-4.596v41.617l-119.724 9.461v-255.39h119.724v43.241h-76.482v58.105zm237.284-58.104h-44.862v198.908c-14.594 0-29.188 0-43.239.539v-199.447h-44.862v-43.242h132.965l-.002 43.242zm70.266 55.132h59.187v43.24h-59.187v98.104h-42.433v-239.718h120.808v43.241h-78.375v55.133zm148.641 103.507c24.594.539 49.456 2.434 73.51 3.783v42.701c-38.646-2.434-77.293-4.863-116.75-5.676v-242.689h43.24v201.881zm109.994 49.457c13.783.812 28.377 1.623 42.43 3.242v-254.58h-42.43v251.338zm231.881-251.338l-54.863 131.615 54.863 145.127c-16.217-2.162-32.432-5.135-48.648-7.838l-31.078-79.994-31.617 73.51c-15.678-2.705-30.812-3.516-46.484-5.678l55.672-126.75-50.269-129.992h46.482l28.377 72.699 30.27-72.699h47.295z" fill="#E50914"/>
@@ -36,14 +43,14 @@
       </a>
 
       <!-- Primary Navigation Links -->
-      <nav>
+      <nav class="desktop-nav" aria-label="Main Navigation">
         <ul class="nav-links">
           <li><a class="active" data-nav="home">Home</a></li>
           <li><a data-nav="tv">TV Shows</a></li>
           <li><a data-nav="movies">Movies</a></li>
           <li><a data-nav="new">New &amp; Popular</a></li>
           <li><a data-nav="list">My List</a></li>
-          <li><a data-nav="home">Browse by Language</a></li>
+          <li><a data-nav="browse">Browse by Languages</a></li>
         </ul>
       </nav>
     </div>
@@ -53,7 +60,7 @@
       <!-- Expanding Interactive Search Bar -->
       <div class="search-wrapper">
         <div class="search-box" id="searchBox">
-          <button class="search-icon-btn" id="searchIconBtn" aria-label="Search Titles, People, Genres">
+          <button class="search-icon-btn" id="searchIconBtn" aria-label="Search Titles, People, Genres" title="Search (Press '/' to focus)">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
@@ -63,11 +70,11 @@
         </div>
       </div>
 
-      <a href="#" class="kids-link">Kids</a>
+      <a href="#" class="kids-link" id="kidsNavBtn">Kids</a>
 
       <!-- Notifications Dropdown -->
       <div class="notification-wrapper">
-        <button class="nav-icon-btn" id="notifBtn" aria-label="Notifications">
+        <button class="nav-icon-btn" id="notifBtn" aria-label="Notifications" title="Notifications">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
           </svg>
@@ -75,26 +82,29 @@
         </button>
 
         <div class="notifications-dropdown" id="notificationsDropdown">
-          <div class="notif-header">Recent Releases & Updates</div>
+          <div class="notif-header">Recent Releases &amp; Updates</div>
           <ul class="notif-list">
-            <li class="notif-item" onclick="openModal(movieDatabase[8])">
-              <img src="https://image.tmdb.org/t/p/w500/1QdXdRYfktUSONkl1oD5gc6Be0s.jpg" alt="Squid Game" />
+            <li class="notif-item" onclick="openModalById('squid-game-ws')">
+              <img src="https://image.tmdb.org/t/p/w500/1QdXdRYfktUSONkl1oD5gc6Be0s.jpg" alt="Squid Game"
+                   onerror="if(!this.dataset.fe){this.dataset.fe='1';this.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\'><defs><linearGradient id=\'g\' x1=\'0%\' y1=\'0%\' x2=\'100%\' y2=\'100%\'><stop offset=\'0%\' stop-color=\'%230f172a\'/><stop offset=\'100%\' stop-color=\'%231e293b\'/></linearGradient></defs><rect width=\'60\' height=\'60\' fill=\'url(%23g)\' rx=\'4\'/><text x=\'30\' y=\'22\' font-family=\'Arial Black\' font-weight=\'900\' font-size=\'22\' fill=\'%2360a5fa\' text-anchor=\'middle\'>N</text><text x=\'30\' y=\'44\' font-family=\'Arial\' font-size=\'7\' font-weight=\'700\' fill=\'%2360a5fa\' text-anchor=\'middle\' letter-spacing=\'1\'>SERIES</text></svg>');}" />
               <div class="notif-info">
                 <h4>Squid Game: Season 2</h4>
                 <p>New Season Now Streaming!</p>
                 <span>Today</span>
               </div>
             </li>
-            <li class="notif-item" onclick="openModal(movieDatabase[13])">
-              <img src="https://image.tmdb.org/t/p/w500/abfJJLzbK2oh4dQvhK26vIqj6mr.jpg" alt="Arcane" />
+            <li class="notif-item" onclick="openModalById('arcane')">
+              <img src="https://image.tmdb.org/t/p/w500/abfJJLzbK2oh4dQvhK26vIqj6mr.jpg" alt="Arcane"
+                   onerror="if(!this.dataset.fe){this.dataset.fe='1';this.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\'><defs><linearGradient id=\'g\' x1=\'0%\' y1=\'0%\' x2=\'100%\' y2=\'100%\'><stop offset=\'0%\' stop-color=\'%230f051d\'/><stop offset=\'100%\' stop-color=\'%23240a3d\'/></linearGradient></defs><rect width=\'60\' height=\'60\' fill=\'url(%23g)\' rx=\'4\'/><text x=\'30\' y=\'22\' font-family=\'Arial Black\' font-weight=\'900\' font-size=\'22\' fill=\'%23d946ef\' text-anchor=\'middle\'>N</text><text x=\'30\' y=\'44\' font-family=\'Arial\' font-size=\'7\' font-weight=\'700\' fill=\'%23d946ef\' text-anchor=\'middle\' letter-spacing=\'1\'>ANIME</text></svg>');}" />
               <div class="notif-info">
                 <h4>Arcane: Season 2</h4>
                 <p>The epic battle continues in Piltover.</p>
                 <span>2 days ago</span>
               </div>
             </li>
-            <li class="notif-item" onclick="openModal(movieDatabase[1])">
-              <img src="https://image.tmdb.org/t/p/w500/v1tRXZ4JtD2Iv6fjkPvT4GiwslV.jpg" alt="Dune 2" />
+            <li class="notif-item" onclick="openModalById('dune-part-two')">
+              <img src="https://image.tmdb.org/t/p/w500/v1tRXZ4JtD2Iv6fjkPvT4GiwslV.jpg" alt="Dune 2"
+                   onerror="if(!this.dataset.fe){this.dataset.fe='1';this.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'60\' height=\'60\'><defs><linearGradient id=\'g\' x1=\'0%\' y1=\'0%\' x2=\'100%\' y2=\'100%\'><stop offset=\'0%\' stop-color=\'%23030712\'/><stop offset=\'100%\' stop-color=\'%230f172a\'/></linearGradient></defs><rect width=\'60\' height=\'60\' fill=\'url(%23g)\' rx=\'4\'/><text x=\'30\' y=\'22\' font-family=\'Arial Black\' font-weight=\'900\' font-size=\'22\' fill=\'%2338bdf8\' text-anchor=\'middle\'>N</text><text x=\'30\' y=\'44\' font-family=\'Arial\' font-size=\'7\' font-weight=\'700\' fill=\'%2338bdf8\' text-anchor=\'middle\' letter-spacing=\'1\'>SCI-FI</text></svg>');}" />
               <div class="notif-info">
                 <h4>Dune: Part Two</h4>
                 <p>Now available in 4K Ultra HD.</p>
@@ -105,19 +115,71 @@
         </div>
       </div>
 
-      <!-- User Profile & Dropdown Menu -->
+      <!-- User Profile & Dropdown Menu with Authentic Netflix Colored Avatars -->
       <div class="user-menu-wrapper">
-        <button class="user-avatar-btn" aria-label="User Profile">
-          <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80" alt="Profile Avatar" />
-          <svg class="caret-icon" width="10" height="10" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User Profile" title="Account & Profiles">
+          <div class="avatar-box avatar-blue" aria-hidden="true">
+            <svg class="avatar-svg" viewBox="0 0 100 100" fill="none">
+              <rect width="100" height="100" rx="8" fill="#0071EB"/>
+              <rect x="22" y="30" width="16" height="22" rx="8" fill="#141414"/>
+              <rect x="62" y="30" width="16" height="22" rx="8" fill="#141414"/>
+              <path d="M26 66C32 78 68 78 74 66" stroke="#141414" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <svg class="caret-icon" width="10" height="10" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
         </button>
         <div class="profile-dropdown">
           <a class="profile-item" href="#">
-            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=60&q=80" alt="User 1" />
-            <span>Profile 1</span>
+            <div class="avatar-box avatar-blue">
+              <svg class="avatar-svg" viewBox="0 0 100 100" fill="none">
+                <rect width="100" height="100" rx="6" fill="#0071EB"/>
+                <rect x="22" y="30" width="16" height="22" rx="8" fill="#141414"/>
+                <rect x="62" y="30" width="16" height="22" rx="8" fill="#141414"/>
+                <path d="M26 66C32 78 68 78 74 66" stroke="#141414" stroke-width="8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span>Alex (Primary)</span>
           </a>
           <a class="profile-item" href="#">
-            <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=60&q=80" alt="Kids Profile" />
+            <div class="avatar-box avatar-red">
+              <svg class="avatar-svg" viewBox="0 0 100 100" fill="none">
+                <rect width="100" height="100" rx="6" fill="#E50914"/>
+                <circle cx="32" cy="38" r="8" fill="#FFFFFF"/>
+                <circle cx="68" cy="38" r="8" fill="#FFFFFF"/>
+                <path d="M28 62C36 74 64 74 72 62" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span>Sarah</span>
+          </a>
+          <a class="profile-item" href="#">
+            <div class="avatar-box avatar-yellow">
+              <svg class="avatar-svg" viewBox="0 0 100 100" fill="none">
+                <rect width="100" height="100" rx="6" fill="#FFA00A"/>
+                <rect x="24" y="32" width="14" height="16" rx="6" fill="#141414"/>
+                <rect x="62" y="32" width="14" height="16" rx="6" fill="#141414"/>
+                <path d="M28 64C36 78 64 78 72 64" stroke="#141414" stroke-width="7" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span>Sam</span>
+          </a>
+          <a class="profile-item" href="#">
+            <div class="avatar-box avatar-green">
+              <svg class="avatar-svg" viewBox="0 0 100 100" fill="none">
+                <rect width="100" height="100" rx="6" fill="#2ECC71"/>
+                <path d="M22 36L38 36" stroke="#141414" stroke-width="6" stroke-linecap="round"/>
+                <circle cx="68" cy="36" r="7" fill="#141414"/>
+                <path d="M30 62C38 72 62 72 70 62" stroke="#141414" stroke-width="7" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span>Guest</span>
+          </a>
+          <a class="profile-item" href="#">
+            <div class="avatar-box avatar-kids">
+              <svg class="avatar-svg" viewBox="0 0 100 100" fill="none">
+                <rect width="100" height="100" rx="6" fill="#38BDF8"/>
+                <text x="50" y="62" font-family="'Inter', sans-serif" font-weight="900" font-size="28" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">KIDS</text>
+              </svg>
+            </div>
             <span>Kids</span>
           </a>
           <div class="profile-divider"></div>
@@ -126,37 +188,71 @@
           <a class="profile-item" href="#">Account</a>
           <a class="profile-item" href="#">Help Center</a>
           <div class="profile-divider"></div>
-          <a class="profile-item" href="#" style="color: #e5e5e5; font-weight: 600;">Sign out of Netflix</a>
+          <a class="profile-item sign-out-link" href="#">Sign out of Netflix</a>
         </div>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div class="mobile-drawer-header">
+      <div class="avatar-box avatar-blue" style="width: 38px; height: 38px;">
+        <svg class="avatar-svg" viewBox="0 0 100 100" fill="none">
+          <rect width="100" height="100" rx="8" fill="#0071EB"/>
+          <rect x="22" y="30" width="16" height="22" rx="8" fill="#141414"/>
+          <rect x="62" y="30" width="16" height="22" rx="8" fill="#141414"/>
+          <path d="M26 66C32 78 68 78 74 66" stroke="#141414" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="mobile-user-info">
+        <h4>Alex</h4>
+        <span>Switch Profiles</span>
+      </div>
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a class="active" data-nav="home">Home</a></li>
+      <li><a data-nav="tv">TV Shows</a></li>
+      <li><a data-nav="movies">Movies</a></li>
+      <li><a data-nav="new">New &amp; Popular</a></li>
+      <li><a data-nav="list">My List</a></li>
+      <li><a data-nav="browse">Browse by Languages</a></li>
+    </ul>
+    <div class="mobile-drawer-footer">
+      <a href="#">Account</a>
+      <a href="#">Help Center</a>
+      <a href="#">Sign Out</a>
+    </div>
+  </div>
 
   <!-- ==========================================
        CINEMATIC HERO BILLBOARD
        ========================================== -->
   <section class="hero" id="heroSection">
     <div class="hero-backdrop">
-      <img id="heroBackdropImg" src="https://image.tmdb.org/t/p/w1280/56v2KjBlU4XaOv9rVYEQypROD7P.jpg" alt="Featured Title Banner" />
+      <img id="heroBackdropImg" src="https://image.tmdb.org/t/p/w1280/56v2KjBlU4XaOv9rVYEQypROD7P.jpg" alt="Featured Title Banner"
+           onerror="if(!this.dataset.fe){this.dataset.fe='1';this.style.background='linear-gradient(135deg,#141414 0%,#1e293b 100%)';this.src='';}" />
       <div class="hero-vignette"></div>
     </div>
 
     <div class="hero-content">
       <div class="hero-series-badge">
         <span class="hero-n-badge">N</span>
-        <span>SERIES</span>
+        <span id="heroTypeBadge">SERIES</span>
       </div>
       <h1 class="hero-title" id="heroTitle">STRANGER THINGS</h1>
 
       <div class="hero-badges-row">
-        <div class="badge-top10">
+        <div class="badge-top10" id="heroTop10Badge">
           <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          #1 in TV Shows Today
+          <span id="heroTop10Text">#1 in TV Shows Today</span>
         </div>
-        <span class="badge-match">98% Match</span>
-        <span class="badge-pill">TV-14</span>
-        <span class="badge-pill">4K Ultra HD</span>
-        <span class="badge-pill">5.1 Audio</span>
+        <span class="badge-match" id="heroMatch">98% Match</span>
+        <span class="badge-pill" id="heroYear">2024</span>
+        <span class="badge-pill" id="heroAge">TV-14</span>
+        <span class="badge-pill" id="heroDuration">4 Seasons</span>
+        <span class="badge-pill" id="heroQuality">4K Ultra HD</span>
+        <span class="badge-pill" id="heroAudio">5.1 Audio</span>
       </div>
 
       <p class="hero-synopsis" id="heroSynopsis">
@@ -172,7 +268,7 @@
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
           More Info
         </button>
-        <button class="btn btn-dark" id="heroNextBtn" title="Next Featured Title">
+        <button class="btn btn-dark" id="heroNextBtn" title="Next Featured Title (Cycle Spotlight)">
           <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
           Next
         </button>
@@ -181,10 +277,10 @@
 
     <!-- Hero Right Controls: Volume & Maturity Badge -->
     <div class="hero-right-controls">
-      <button class="hero-mute-btn" id="heroMuteBtn" aria-label="Toggle Sound">
+      <button class="hero-mute-btn" id="heroMuteBtn" aria-label="Toggle Sound" title="Toggle Sound">
         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
       </button>
-      <div class="hero-maturity-badge">16+</div>
+      <div class="hero-maturity-badge" id="heroMaturityBadge">16+</div>
     </div>
   </section>
 
@@ -205,18 +301,19 @@
           <div class="genre-dropdown-header">Filter by Category</div>
           <div class="genre-dropdown-grid">
             <button class="genre-option active" data-category="all">✨ All Categories</button>
-            <button class="genre-option" data-category="webseries">📺 TV Series &amp; Binge Shows</button>
-            <button class="genre-option" data-category="horror">👻 Horror &amp; Dark Suspense</button>
-            <button class="genre-option" data-category="scifi">🚀 Sci-Fi &amp; Fiction Movies</button>
-            <button class="genre-option" data-category="anime">⚔️ Anime &amp; Japanese Hits</button>
-            <button class="genre-option" data-category="action">💥 Action &amp; Blockbusters</button>
-            <button class="genre-option" data-category="thrillers">🔍 Mind-Twisting Thrillers</button>
+            <button class="genre-option" data-category="top10">🔥 Trending Now (Top 10)</button>
+            <button class="genre-option" data-category="webseries">⭐ Popular on Netflix</button>
+            <button class="genre-option" data-category="scifi">🚀 Action &amp; Sci-Fi Thrillers</button>
+            <button class="genre-option" data-category="trending">🏆 Top Rated Movies</button>
             <button class="genre-option" data-category="comedy">😂 Comedies &amp; Sitcoms</button>
+            <button class="genre-option" data-category="originals">🎬 Netflix Originals</button>
+            <button class="genre-option" data-category="action">💥 Explosive Action</button>
+            <button class="genre-option" data-category="horror">👻 Horror &amp; Dark Suspense</button>
+            <button class="genre-option" data-category="thrillers">🔍 Mind-Twisting Thrillers</button>
             <button class="genre-option" data-category="romance">❤️ Romance &amp; Love Stories</button>
             <button class="genre-option" data-category="dramas">🎭 Critically Acclaimed Dramas</button>
             <button class="genre-option" data-category="docs">🌍 Documentaries &amp; Real Life</button>
-            <button class="genre-option" data-category="originals">🎬 Netflix Originals</button>
-            <button class="genre-option" data-category="top10">🔥 Top 10 Today</button>
+            <button class="genre-option" data-category="anime">⚔️ Anime &amp; Japanese Hits</button>
           </div>
         </div>
       </div>
@@ -225,17 +322,19 @@
       <div class="category-pills-container">
         <div class="category-pills" id="categoryPills">
           <button class="cat-pill active" data-cat="all">All</button>
-          <button class="cat-pill" data-cat="webseries">TV Series</button>
-          <button class="cat-pill" data-cat="horror">Horror</button>
-          <button class="cat-pill" data-cat="scifi">Sci-Fi &amp; Fiction</button>
-          <button class="cat-pill" data-cat="anime">Anime</button>
+          <button class="cat-pill" data-cat="top10">Top 10</button>
+          <button class="cat-pill" data-cat="webseries">Popular</button>
+          <button class="cat-pill" data-cat="scifi">Action &amp; Sci-Fi</button>
+          <button class="cat-pill" data-cat="trending">Top Rated</button>
+          <button class="cat-pill" data-cat="comedy">Comedy</button>
+          <button class="cat-pill" data-cat="originals">Originals</button>
           <button class="cat-pill" data-cat="action">Action</button>
+          <button class="cat-pill" data-cat="horror">Horror</button>
           <button class="cat-pill" data-cat="thrillers">Thrillers</button>
           <button class="cat-pill" data-cat="romance">Romance</button>
-          <button class="cat-pill" data-cat="comedy">Comedy</button>
           <button class="cat-pill" data-cat="dramas">Dramas</button>
           <button class="cat-pill" data-cat="docs">Documentaries</button>
-          <button class="cat-pill" data-cat="top10">Top 10</button>
+          <button class="cat-pill" data-cat="anime">Anime</button>
         </div>
       </div>
     </div>
@@ -279,13 +378,20 @@
   <!-- ==========================================
        NETFLIX MOVIE DETAIL & TRAILER MODAL
        ========================================== -->
-  <div class="modal-overlay" id="movieModal">
+  <div class="modal-overlay" id="movieModal" role="dialog" aria-modal="true">
     <div class="modal-container">
       <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close Modal">&times;</button>
       
-      <!-- Modal Hero Banner -->
+      <!-- Modal Hero Banner with Video Autoplay Container -->
       <div class="modal-hero">
         <img class="modal-hero-img" id="modalHeroImg" src="" alt="Title Banner" />
+        
+        <!-- Live Video Preview Layer inside Hero -->
+        <div class="modal-video-container" id="modalHeroVideoContainer">
+          <iframe id="modalHeroVideoIframe" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+          <button class="modal-video-close" id="modalHeroVideoClose" title="Close Video Preview">&times;</button>
+        </div>
+
         <div class="modal-hero-vignette"></div>
         <div class="modal-hero-info">
           <h2 class="modal-hero-title" id="modalTitle">Title</h2>
@@ -298,6 +404,12 @@
               <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
               <span>Add to My List</span>
             </button>
+            <button class="modal-hero-circle-btn" id="modalLikeBtn" title="I like this">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+            </button>
+            <button class="modal-hero-circle-btn" id="modalTrailerPreviewBtn" title="Watch Trailer Preview">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6.47L5.76 10H20v8H4V6.47M22 4h-4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4z"/></svg>
+            </button>
           </div>
         </div>
       </div>
@@ -305,7 +417,7 @@
       <!-- Modal Body -->
       <div class="modal-body">
         <div class="modal-grid">
-          <!-- Left Column: Synopsis & Meta -->
+          <!-- Left Column: Synopsis, Age Advisory & Meta -->
           <div class="modal-main-info">
             <div class="modal-meta-row">
               <span class="modal-match" id="modalMatch">98% Match</span>
@@ -313,27 +425,65 @@
               <span class="modal-badge" id="modalAge">TV-MA</span>
               <span class="modal-year" id="modalDuration">4 Seasons</span>
               <span class="modal-hd-badge" id="modalQuality">4K Ultra HD</span>
+              <span class="modal-hd-badge">5.1 Audio</span>
             </div>
+
+            <!-- Content Advisory Warning -->
+            <div class="modal-advisory" id="modalAdvisory">
+              <span class="advisory-badge">Advisory</span>
+              <span class="advisory-text" id="modalAdvisoryText">Suitable for mature audiences. Language, violence, intense psychological suspense.</span>
+            </div>
+
             <p class="modal-synopsis" id="modalSynopsis">Movie plot overview.</p>
           </div>
 
-          <!-- Right Column: Cast, Genres, Category -->
+          <!-- Right Column: Cast, Creators, Genres & Tags -->
           <div class="modal-sidebar">
             <div class="modal-info-line">
-              <span>Cast:</span> <span id="modalCast" style="color: #ddd;"></span>
+              <span class="info-label">Cast:</span> <span id="modalCast" class="info-val"></span>
             </div>
             <div class="modal-info-line">
-              <span>Genres:</span> <span id="modalGenres" style="color: #ddd;"></span>
+              <span class="info-label">Creators / Director:</span> <span id="modalCreators" class="info-val"></span>
             </div>
             <div class="modal-info-line">
-              <span>Category:</span> <span id="modalCategory" style="color: #ddd;"></span>
+              <span class="info-label">Genres:</span> <span id="modalGenres" class="info-val"></span>
+            </div>
+            <div class="modal-info-line">
+              <span class="info-label">This show is:</span> <span id="modalTags" class="info-val"></span>
             </div>
           </div>
         </div>
 
-        <!-- More Like This / Recommendations Grid -->
-        <h3 class="modal-recommendations-title">More Like This</h3>
-        <div class="recommendations-grid" id="modalRecommendationsGrid"></div>
+        <!-- Interactive Modal Navigation Tabs -->
+        <div class="modal-tabs" id="modalTabs">
+          <button class="modal-tab-btn active" id="tabEpisodesBtn" data-tab="episodes">Episodes</button>
+          <button class="modal-tab-btn" id="tabSimilarBtn" data-tab="similar">More Like This</button>
+          <button class="modal-tab-btn" id="tabAboutBtn" data-tab="about">About <span id="tabAboutTitle">Title</span></button>
+        </div>
+
+        <!-- Tab 1: Episodes List (for Series) -->
+        <div class="modal-tab-panel active" id="tabEpisodesPanel">
+          <div class="episodes-header">
+            <h3 class="episodes-season-title" id="episodesSeasonTitle">Season 1</h3>
+            <span class="episodes-badge" id="episodesAgeBadge">TV-MA</span>
+          </div>
+          <div class="episodes-list" id="modalEpisodesList">
+            <!-- Dynamic Episode Cards -->
+          </div>
+        </div>
+
+        <!-- Tab 2: Similar Movies / More Like This Grid -->
+        <div class="modal-tab-panel" id="tabSimilarPanel">
+          <div class="recommendations-grid" id="modalRecommendationsGrid"></div>
+        </div>
+
+        <!-- Tab 3: About Show / Movie Details -->
+        <div class="modal-tab-panel" id="tabAboutPanel">
+          <div class="about-grid" id="modalAboutGrid">
+            <!-- Dynamic About Section -->
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -341,8 +491,11 @@
   <!-- ==========================================
        VIDEO TRAILER PLAYER MODAL
        ========================================== -->
-  <div class="video-player-overlay" id="videoPlayerOverlay">
+  <div class="video-player-overlay" id="videoPlayerOverlay" role="dialog" aria-modal="true">
     <button class="video-player-close" id="videoPlayerCloseBtn" aria-label="Close Video Player">&times;</button>
+    <div class="video-player-header">
+      <span class="video-player-title" id="videoPlayerTitle">Trailer</span>
+    </div>
     <div class="video-player-wrapper">
       <iframe id="trailerIframe" src="" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
     </div>
@@ -382,8 +535,8 @@
       <a href="#">Contact Us</a>
     </div>
 
-    <button class="service-code-btn">Service Code</button>
-    <p class="footer-copy">&copy; 1997-2024 Netflix, Inc. All rights reserved. Netflix Clone project.</p>
+    <button class="service-code-btn" id="serviceCodeBtn">Service Code</button>
+    <p class="footer-copy">&copy; 1997-2026 Netflix, Inc. Netflix Clone Web Application. Built with pure HTML, CSS, and JavaScript.</p>
   </footer>
 
   <!-- Swiper JS Library -->
@@ -392,4 +545,6 @@
   <!-- Master Application Script -->
   <script src="script.js"></script>
 </body>
+</html>
+
 </html>
